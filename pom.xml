@@ -87,7 +87,6 @@
                 </configuration>
             </plugin>
         </plugins>
-        <finalName>Spring_MVC</finalName>
     </build>
 
 

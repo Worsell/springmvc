@@ -10,7 +10,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
-@ComponentScan("javalynx")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 

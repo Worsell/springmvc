@@ -19,7 +19,6 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
-@ComponentScan(value = "javalynx")
 public class AppConfig {
 
     @Autowired
@@ -42,9 +41,11 @@ public class AppConfig {
 
         Properties props=new Properties();
         props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
+        props.put("hibernate.format_sql", env.getProperty("hibernate.format_sql"));
+
         props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
         props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
-
+        // System.out.println("СОЗДАЕМ БИН SESSION FACTORY");
         factoryBean.setHibernateProperties(props);
         factoryBean.setAnnotatedClasses(User.class);
         return factoryBean;
