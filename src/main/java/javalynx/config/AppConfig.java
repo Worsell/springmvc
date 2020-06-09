@@ -19,6 +19,7 @@ import java.util.Properties;
 @Configuration
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
+@ComponentScan("javalynx")
 public class AppConfig {
 
     @Autowired

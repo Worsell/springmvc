@@ -19,10 +19,14 @@ import java.util.Map;
 @RequestMapping("/admin")
 public class AdminController {
 
-    @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
+    @Autowired
+    public AdminController(UserService userService) {
+        this.userService = userService;
+    }
+
+    @RequestMapping(value = "", method = RequestMethod.GET)
     public String getCarsTable(ModelMap model) throws SQLException {
         List<User> users = userService.getAllUsers();
         model.addAttribute("users", users);

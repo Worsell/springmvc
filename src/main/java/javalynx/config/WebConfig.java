@@ -11,6 +11,7 @@ import org.springframework.web.servlet.view.JstlView;
 
 @Configuration
 @EnableWebMvc
+@ComponentScan("javalynx.controller")
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
