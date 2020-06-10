@@ -1,4 +1,5 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <html>
 <head>
     <meta charset="utf-16">
@@ -7,8 +8,8 @@
 <body>
 <form action="/admin/create" method="POST">
     <button>add user/admin</button>
-    <input name="firstname" type="text" placeholder="firstname">
-    <input name="lastname" type="text" placeholder="lastname">
+    <input name="firstName" type="text" placeholder="firstname">
+    <input name="lastName" type="text" placeholder="lastname">
     <input name="password" type="password" placeholder="password">
     <select name="role">
         <option value="admin">admin</option>
@@ -37,6 +38,10 @@
                 <form action="/admin/update" method="GET">
                     <button name="ok">press</button>
                     <input name="id" type="hidden" placeholder="firstname" value=${user.id}>
+                    <input name="firstName" type="hidden" placeholder="firstname" value=${user.firstName}>
+                    <input name="lastName" type="hidden" placeholder="firstname" value=${user.lastName}>
+                    <input name="password" type="hidden" placeholder="firstname" value=${user.password}>
+                    <input name="role" type="hidden" placeholder="firstname" value=${user.role}>
                 </form>
             </th>
             <th>

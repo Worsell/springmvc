@@ -18,7 +18,7 @@ public class UserService {
     private UserDao userDao;
 
     public List<User> getAllUsers() throws SQLException {
-        return userDao.getUsers();
+        return userDao.getAllUser();
     }
 
     public boolean updateUser(User user) throws SQLException {
@@ -27,6 +27,10 @@ public class UserService {
 
     public boolean removeUser(User user) throws SQLException {
         return userDao.removeUser(user);
+    }
+
+    public boolean removeUser(long id) throws SQLException {
+        return removeUser((new User()).setId(id));
     }
 
     public boolean addUser(User user) throws SQLException {

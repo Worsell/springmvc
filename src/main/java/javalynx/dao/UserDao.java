@@ -12,6 +12,9 @@ import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.sql.SQLException;
 import java.util.List;
@@ -21,86 +24,30 @@ import java.util.Objects;
 public class UserDao {
 
     @Autowired
-    private SessionFactory sessionFactory;
+    private EntityManagerFactory entityManagerFactory;
+    // Entity manager class
 
-    @SuppressWarnings("unchecked")
-    @Transactional
+    @PersistenceContext
+    private EntityManager manager;
+
+    @Transactional(readOnly = true)
     public List<User> getAllUser() {
-        // System.out.println(Thread.currentThread().getName());
-        TypedQuery<User> query= sessionFactory.getCurrentSession().createQuery("from User");
+        TypedQuery<User> query = manager
+                .createQuery("from User", User.class);
         return query.getResultList();
     }
 
-    @Nullable
-    @Transactional
-    public List<User> getUsers() throws SQLException {
-        Session session = null;
-        Transaction transaction = null;
-        List<User> users = null;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            Query query = session.createQuery("from User");
-            users = (List<User>) query.list();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-        }
-        if (session != null) {
-            session.close();
-        }
-        return users;
-    }
-
-    @Transactional
-
+    @Transactional()
     public boolean addUser(User user) throws SQLException {
-        Session session = null;
-        Transaction transaction = null;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.save(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return false;
-        }
-        session.close();
+        manager.persist(user);
+        manager.flush();
         return true;
     }
 
     @Transactional
     public boolean removeUser(long id) throws SQLException {
-        User user = new User();
-        user.setId(id);
-        Session session = null;
-        Transaction transaction = null;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.delete(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return false;
-        }
-        session.close();
+        User user = manager.find(User.class, id);
+        manager.remove(user);
         return true;
     }
 
@@ -112,52 +59,19 @@ public class UserDao {
     @Transactional
     public boolean validateUser(User user) throws SQLException {
         String hql = "select count(id) FROM User where firstname = :firstname and lastname = :lastname and password = :password";
-        Session session = null;
-        Long id = 0L;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            Query query = session.createQuery(hql);
-            query.setParameter("firstname", user.getFirstName());
-            query.setParameter("lastname", user.getLastName());
-            query.setParameter("password", user.getPassword());
-            id = (Long) query.uniqueResult();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return false;
-        }
-        session.close();
-        return id == 1;
+        TypedQuery<User> query = manager
+                .createQuery(hql, User.class);
+        query.setParameter("firstname", user.getFirstName());
+        query.setParameter("lastname", user.getLastName());
+        query.setParameter("password", user.getPassword());
+        return query.getSingleResult() != null;
     }
 
     @Transactional
     public boolean updateUser(User user) throws SQLException {
         if (user.getId() == 0) return false;
-        Session session = null;
-        Transaction transaction = null;
-
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            session.saveOrUpdate(user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return false;
-        }
-        session.close();
+        manager.merge(user);
+        manager.flush();
         return true;
     }
 
@@ -166,23 +80,7 @@ public class UserDao {
     public User getUserById(long user) throws SQLException {
         if (user == 0) return null;
         User answer;
-        Session session = null;
-        Transaction transaction = null;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            answer = (User) session.get(User.class, user);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return null;
-        }
-        session.close();
+        answer = manager.find(User.class, user);
         return answer;
     }
 
@@ -191,27 +89,11 @@ public class UserDao {
     @Transactional
     public User getUserByFLname(String firstname, String lastname) throws SQLException {
         String hql = "FROM User where firstname = :firstname and lastname = :lastname";
-        Session session = null;
-        Transaction transaction = null;
         User user;
-        try {
-            session = sessionFactory.openSession();
-            transaction = session.beginTransaction();
-            Query query = session.createQuery(hql);
-            query.setParameter("firstname", firstname);
-            query.setParameter("lastname", lastname);
-            user = (User) query.uniqueResult();
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            if (session != null) {
-                session.close();
-            }
-            return null;
-        }
-        session.close();
+        TypedQuery<User> query = manager.createQuery(hql, User.class);
+        query.setParameter("firstname", firstname);
+        query.setParameter("lastname", lastname);
+        user =  query.getSingleResult();
         return user;
     }
 
