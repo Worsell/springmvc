@@ -69,7 +69,7 @@ public class AppConfig {
         transactionManager.setEntityManagerFactory(getEntityManagerFactory());
         return transactionManager;
     }
-
+    /*
     @Bean("messageSource")
     public MessageSource messageSource() {
         ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
@@ -81,6 +81,6 @@ public class AppConfig {
     public LocaleResolver localeResolver() {
         return new CookieLocaleResolver();
     }
-
+    */
 
 }

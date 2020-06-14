@@ -1,14 +1,19 @@
 package javalynx.model;
 
 import com.google.common.hash.Hashing;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.nio.charset.StandardCharsets;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
     @Column(name = "firstname")
     private String firstName;
@@ -18,13 +23,20 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private long id;
+
+    @Column(name = "email", unique = true)
+    private String email;
 
     @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
-    private String role;
+    @ManyToMany
+    @JoinTable(name = "security",
+            joinColumns = @JoinColumn(name = "roles_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+    private List<Role> roles = new LinkedList<>();
 
     public User() {
 
@@ -33,7 +45,8 @@ public class User {
     public User(String firstName, String lastName, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
-        setPassword(password);
+        this.password = password;
+        // setPassword(password);
     }
 
     public long getId() {
@@ -63,23 +76,56 @@ public class User {
         return this;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles;
+    }
+
     public String getPassword() {
         return password;
     }
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
     public User setPassword(String password) {
-        this.password = Hashing.sha512()
-                .hashString(password, StandardCharsets.UTF_8)
-                .toString();
+        this.password = password;
         return this;
     }
 
-    public String getRole() {
-        return role;
+    public User setAuthorities(Role role) {
+        this.roles.add(role);
+        return this;
     }
 
-    public User setRole(String role) {
-        this.role = role;
+    public String getEmail() {
+        return email;
+    }
+
+    public User setEmail(String email) {
+        this.email = email;
         return this;
     }
 
@@ -103,7 +149,7 @@ public class User {
                 ", lastName='" + lastName + '\'' +
                 ", id=" + id +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", role='" + roles.toString() + '\'' +
                 '}';
     }
 }

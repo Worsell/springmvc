@@ -6,6 +6,7 @@
 </head>
 <body>
 <form method="post" action="/admin/update">
+    <input type="text" name="email" placeholder="email" value=${param.get("email")}>
     <input type="text" name="firstName" placeholder="input firstname" value=${param.get("firstName")}>
     <input type="text" name="lastName" placeholder="input lastname" value=${param.get("lastName")}>
     <select name="role">

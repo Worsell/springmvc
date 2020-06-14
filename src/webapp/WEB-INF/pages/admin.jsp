@@ -8,13 +8,12 @@
 <body>
 <form action="/admin/create" method="POST">
     <button>add user/admin</button>
+    <input type="text" name="email" placeholder="email">
     <input name="firstName" type="text" placeholder="firstname">
     <input name="lastName" type="text" placeholder="lastname">
     <input name="password" type="password" placeholder="password">
-    <select name="role">
-        <option value="admin">admin</option>
-        <option selected="selected" value="user">user</option>
-    </select>
+    <p> <input name="admin" type="checkbox" placeholder="isAdmin"> isAdmin </p>
+    <p> <input name="user" type="checkbox" placeholder="isUser"> isUser </p>
 </form>
 <table border="1">
     <caption>list users in database</caption>
@@ -33,15 +32,16 @@
             <th>${user.firstName}</th>
             <th>${user.lastName}</th>
             <th>${user.password}</th>
-            <th>${user.role}</th>
+            <th>${user.authorities}</th>
             <th>
                 <form action="/admin/update" method="GET">
                     <button name="ok">press</button>
+                    <input type="hidden" name="email" placeholder="email">
                     <input name="id" type="hidden" placeholder="firstname" value=${user.id}>
                     <input name="firstName" type="hidden" placeholder="firstname" value=${user.firstName}>
                     <input name="lastName" type="hidden" placeholder="firstname" value=${user.lastName}>
                     <input name="password" type="hidden" placeholder="firstname" value=${user.password}>
-                    <input name="role" type="hidden" placeholder="firstname" value=${user.role}>
+                    <input name="role" type="hidden" placeholder="firstname" value=${user.authorities}>
                 </form>
             </th>
             <th>

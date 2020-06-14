@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.Nullable;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,15 +18,12 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
 public class UserDao {
-
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
-    // Entity manager class
 
     @PersistenceContext
     private EntityManager manager;
@@ -34,7 +32,9 @@ public class UserDao {
     public List<User> getAllUser() {
         TypedQuery<User> query = manager
                 .createQuery("from User", User.class);
-        return query.getResultList();
+        List<User> answer = query.getResultList();
+        System.out.println(answer);
+        return answer;
     }
 
     @Transactional()
@@ -84,6 +84,17 @@ public class UserDao {
         return answer;
     }
 
+    @Nullable
+    @Transactional
+    public User getUserByEmail(String email) {
+        String hql = "FROM User where email = :email";
+        TypedQuery<User> query = manager.createQuery(hql, User.class);
+        query.setParameter("email", email);
+        User user;
+        user = query.getSingleResult();
+        System.out.println(user);
+        return user;
+    }
 
     @Nullable
     @Transactional
@@ -107,6 +118,12 @@ public class UserDao {
     @Transactional
     public Long getIdByUser(User user) throws SQLException {
         return getIdByFLname(user.getFirstName(), user.getLastName());
+    }
+
+    @Nullable
+    @Transactional
+    public Collection<? extends GrantedAuthority> getRolesByEmail(String email) {
+        return Objects.requireNonNull(getUserByEmail(email)).getAuthorities();
     }
 
 }
