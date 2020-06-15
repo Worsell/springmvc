@@ -12,8 +12,11 @@
     <input name="firstName" type="text" placeholder="firstname">
     <input name="lastName" type="text" placeholder="lastname">
     <input name="password" type="password" placeholder="password">
-    <p> <input name="admin" type="checkbox" placeholder="isAdmin"> isAdmin </p>
-    <p> <input name="user" type="checkbox" placeholder="isUser"> isUser </p>
+    <select multiple = "multiple" name="roles">
+        <c:forEach var = "role" items="${roles}">
+            <option value="${role.authority}">${role.authority}</option>
+        </c:forEach>
+    </select>
 </form>
 <table border="1">
     <caption>list users in database</caption>
@@ -36,12 +39,7 @@
             <th>
                 <form action="/admin/update" method="GET">
                     <button name="ok">press</button>
-                    <input type="hidden" name="email" placeholder="email">
                     <input name="id" type="hidden" placeholder="firstname" value=${user.id}>
-                    <input name="firstName" type="hidden" placeholder="firstname" value=${user.firstName}>
-                    <input name="lastName" type="hidden" placeholder="firstname" value=${user.lastName}>
-                    <input name="password" type="hidden" placeholder="firstname" value=${user.password}>
-                    <input name="role" type="hidden" placeholder="firstname" value=${user.authorities}>
                 </form>
             </th>
             <th>

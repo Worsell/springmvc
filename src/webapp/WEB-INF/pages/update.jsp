@@ -6,21 +6,21 @@
 </head>
 <body>
 <form method="post" action="/admin/update">
-    <input type="text" name="email" placeholder="email" value=${param.get("email")}>
-    <input type="text" name="firstName" placeholder="input firstname" value=${param.get("firstName")}>
-    <input type="text" name="lastName" placeholder="input lastname" value=${param.get("lastName")}>
-    <select name="role">
-        <c:if test = "${param.get(\"role\").equals(\"admin\")}">
-            <option selected="selected" value="admin">admin</option>
-            <option value="user">user</option>
-        </c:if>
-        <c:if test = "${param.get(\"role\").equals(\"user\")}">
-            <option value="admin">admin</option>
-            <option selected="selected" value="user">user</option>
-        </c:if>
+    <input type="text" name="email" placeholder="email" value=${email}>
+    <input type="text" name="firstName" placeholder="input firstname" value=${firstName}>
+    <input type="text" name="lastName" placeholder="input lastname" value=${lastName}>
+    <select multiple = "multiple" name="nroles">
+        <c:forEach var = "role" items="${roles}">
+            <c:if test="${urole.contains(role)}">
+                <option selected value="${role.authority}">${role.authority}</option>
+            </c:if>
+            <c:if test="${!urole.contains(role)}">
+                <option value="${role.authority}">${role.authority}</option>
+            </c:if>
+        </c:forEach>
     </select>
-    <input type="password" name="password" placeholder="password" value=${param.get("password")}>
-    <input type="hidden" name="id" placeholder="password" value=${param.get("id")}>
+    <input type="password" name="password" placeholder="password" value=${password}>
+    <input type="text" name="id" placeholder="id" value="${id}">
     <button>ok</button>
 </form>
 </body>

@@ -6,6 +6,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import javalynx.model.User;
 import org.hibernate.Transaction;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.lang.Nullable;
@@ -29,6 +31,7 @@ public class UserDao {
     private EntityManager manager;
 
     @Transactional(readOnly = true)
+    @Fetch(FetchMode.JOIN)
     public List<User> getAllUser() {
         TypedQuery<User> query = manager
                 .createQuery("from User", User.class);
@@ -37,7 +40,8 @@ public class UserDao {
         return answer;
     }
 
-    @Transactional()
+    @Transactional
+    @Fetch(FetchMode.JOIN)
     public boolean addUser(User user) throws SQLException {
         manager.persist(user);
         manager.flush();
@@ -45,6 +49,7 @@ public class UserDao {
     }
 
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public boolean removeUser(long id) throws SQLException {
         User user = manager.find(User.class, id);
         manager.remove(user);
@@ -52,11 +57,13 @@ public class UserDao {
     }
 
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public boolean removeUser(User user) throws SQLException {
         return removeUser(user.getId());
     }
 
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public boolean validateUser(User user) throws SQLException {
         String hql = "select count(id) FROM User where firstname = :firstname and lastname = :lastname and password = :password";
         TypedQuery<User> query = manager
@@ -70,6 +77,7 @@ public class UserDao {
     @Transactional
     public boolean updateUser(User user) throws SQLException {
         if (user.getId() == 0) return false;
+        System.err.println(user);
         manager.merge(user);
         manager.flush();
         return true;
@@ -77,6 +85,7 @@ public class UserDao {
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public User getUserById(long user) throws SQLException {
         if (user == 0) return null;
         User answer;
@@ -86,6 +95,7 @@ public class UserDao {
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public User getUserByEmail(String email) {
         String hql = "FROM User where email = :email";
         TypedQuery<User> query = manager.createQuery(hql, User.class);
@@ -98,6 +108,7 @@ public class UserDao {
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public User getUserByFLname(String firstname, String lastname) throws SQLException {
         String hql = "FROM User where firstname = :firstname and lastname = :lastname";
         User user;
@@ -110,18 +121,21 @@ public class UserDao {
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public Long getIdByFLname(String firstname, String lastname) throws SQLException {
         return Objects.requireNonNull(getUserByFLname(firstname, lastname)).getId();
     }
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public Long getIdByUser(User user) throws SQLException {
         return getIdByFLname(user.getFirstName(), user.getLastName());
     }
 
     @Nullable
     @Transactional
+    @Fetch(FetchMode.JOIN)
     public Collection<? extends GrantedAuthority> getRolesByEmail(String email) {
         return Objects.requireNonNull(getUserByEmail(email)).getAuthorities();
     }
