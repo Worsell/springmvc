@@ -30,4 +30,9 @@ public class AuthenticationController {
     public String postLogin() {
         return "login";
     }
+
+    @GetMapping("/error")
+    public String getError() {
+        return "";
+    }
 }
