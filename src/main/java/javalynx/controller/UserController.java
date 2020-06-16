@@ -21,6 +21,7 @@ public class UserController {
 
     @GetMapping("user")
     public String getUser(Authentication authentication, ModelMap model){
+        // User
         System.out.println("ADDDD");
 
         System.out.println(authentication.getName());

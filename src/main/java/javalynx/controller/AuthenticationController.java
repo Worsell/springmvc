@@ -23,6 +23,7 @@ public class AuthenticationController {
 
     @GetMapping("/login")
     public String getLogin() {
+        System.err.println("LOGIN");
         return "login";
     }
 

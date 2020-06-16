@@ -56,7 +56,10 @@ public class AdminController {
 
     @GetMapping("/update")
     public String getUpdate(@RequestParam Long id, ModelMap modelMap) throws SQLException {
+        // User
         User user = userService.getUserByID(id);
+        modelMap.addAttribute("user", user);
+
         modelMap.addAttribute("firstName", user.getFirstName());
         modelMap.addAttribute("lastName", user.getLastName());
         modelMap.addAttribute("email", user.getEmail());
@@ -65,7 +68,6 @@ public class AdminController {
         List<Role> roles = roleService.getRoles();
         modelMap.addAttribute("roles", roles);
         modelMap.addAttribute("id", id);
-
         return "update";
     }
 
