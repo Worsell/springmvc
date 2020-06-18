@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <title>Title</title>
+</head>
+<body>
+<form method="post" action="/admin/update">
+    <input type="text" name="email" placeholder="email" th:value="${user.email}">
+    <input type="text" name="firstName" placeholder="input firstname" th:value="${user.firstName}">
+    <input type="text" name="lastName" placeholder="input lastname" th:value="${user.lastName}">
+    <select multiple = "multiple" name="nroles">
+        <option th:each="role : ${roles}"
+                th:if="${user.authorities.contains(role)}"
+                selected
+                th:value="${role.authority}"
+                th:text="${role.authority}"></option>
+        <option th:each="role : ${roles}"
+                th:unless="${user.authorities.contains(role)}"
+                th:value="${role.authority}"
+                th:text="${role.authority}"></option>
+
+    </select>
+    <input type="password" name="password" placeholder="password" th:value="${user.password}">
+    <input type="text" name="id" placeholer="id" th:value="${user.id}">
+    <button>ok</button>
+</form>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <title>user console</title>
+</head>
+<body>
+<table>
+    <caption>information about your users</caption>
+    <tr>
+        <th> id </th>
+        <th> email </th>
+        <th> firstname </th>
+        <th> lastname </th>
+        <th> password </th>
+        <th> role </th>
+    </tr>
+    <tr>
+        <th th:text="${user.id}"></th>
+        <th th:text="${user.email}"></th>
+        <th th:text="${user.firstName}"></th>
+        <th th:text="${user.lastName}"></th>
+        <th th:text="${user.password}"></th>
+        <th th:text="${user.authorities}"></th>
+    </tr>
+</table>
+</body>
+</html>
